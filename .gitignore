@@ -1,0 +1,15 @@
+# dependencies
+node_modules/
+
+# environment variables
+.env
+
+# Next.js build output
+.next/
+
+# PostgreSQL
+*.sql
+
+# OS files
+.DS_Store
+Thumbs.db
