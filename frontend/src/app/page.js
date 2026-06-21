@@ -1,25 +1,18 @@
-import Link from "next/link";
+'use client'
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+
 export default function Home() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    setIsLoggedIn(!!token)
+  }, [])
+
   return (
     <main className="min-h-screen bg-gray-950 text-white">
-      {/* Navbar */}
-      <nav className="flex items-center justify-between px-8 py-4 border-b border-gray-800">
-        <h1 className="text-xl font-bold text-white">AlgoFlow</h1>
-        <div className="flex gap-4">
-          <Link
-            href="/login"
-            className="text-gray-400 hover:text-white transition py-2"
-          >
-            Login
-          </Link>
-          <Link
-            href="/register"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
-          >
-            Get Started
-          </Link>
-        </div>
-      </nav>
 
       {/* Hero */}
       <section className="flex flex-col items-center justify-center text-center px-4 py-24">
@@ -29,10 +22,10 @@ export default function Home() {
           when you are placement ready.
         </p>
         <Link
-          href="/register"
+          href={isLoggedIn ? "/dashboard" : "/register"}
           className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg transition"
         >
-          Start Practicing Free
+          {isLoggedIn ? "Go to Dashboard" : "Start Practicing Free"}
         </Link>
       </section>
 

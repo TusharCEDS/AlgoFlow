@@ -88,16 +88,7 @@ export default function Problem() {
     <main className="min-h-screen bg-gray-950 text-white">
 
       {/* Navbar */}
-      <nav className="flex items-center justify-between px-8 py-4 border-b border-gray-800">
-        <h1 className="text-xl font-bold">AlgoFlow</h1>
-        <button
-          onClick={handleRun}
-          disabled={loading}
-          className="bg-green-600 hover:bg-green-700 disabled:bg-green-800 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg text-sm font-medium transition"
-        >
-          {loading ? 'Running...' : 'Run Code'}
-        </button>
-      </nav>
+      
 
       <div className="grid grid-cols-1 md:grid-cols-2 h-[calc(100vh-65px)]">
 

@@ -41,15 +41,7 @@ export default function Dashboard() {
 
   return (
     <main className="min-h-screen bg-gray-950 text-white">
-      <nav className="flex items-center justify-between px-8 py-4 border-b border-gray-800">
-        <h1 className="text-xl font-bold">AlgoFlow</h1>
-        <button
-          onClick={handleLogout}
-          className="text-gray-400 hover:text-white transition"
-        >
-          Logout
-        </button>
-      </nav>
+      
 
       <section className="px-8 py-12 max-w-4xl mx-auto">
         <h2 className="text-2xl font-bold mb-2">
