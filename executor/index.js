@@ -1,10 +1,12 @@
 const express = require("express");
+const cors = require("cors");
 const { exec } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.post("/execute", (req, res) => {
@@ -32,4 +34,4 @@ app.post("/execute", (req, res) => {
   child.stdin.write(input || "");
   child.stdin.end();
 });
-app.listen(6000, () => console.log("Executor running on port 6000"));
+app.listen(6001, () => console.log("Executor running on port 6001"));
