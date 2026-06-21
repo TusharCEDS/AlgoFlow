@@ -3,7 +3,9 @@ const cors = require('cors')
 const dotenv = require('dotenv')
 const db = require('./db/index')
 const authRoutes = require('./routes/auth')
+const problemRoutes = require('./routes/problems')
 const authMiddleware = require('./middleware/auth')
+
 dotenv.config()
 
 const app = express()
@@ -12,9 +14,12 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/auth', authRoutes)
+app.use('/api/problems', problemRoutes)
+
 app.get('/api/protected', authMiddleware, (req, res) => {
   res.json({ message: `Hello user ${req.user.id}, you are authenticated` })
 })
+
 app.get('/', (req, res) => {
   res.json({ message: 'AlgoFlow backend is running' })
 })
