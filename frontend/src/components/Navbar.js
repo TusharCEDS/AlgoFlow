@@ -1,40 +1,53 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Navbar() {
-  const router = useRouter()
-  const [authState, setAuthState] = useState({ checked: false, isLoggedIn: false })
+  const router = useRouter();
+  const [authState, setAuthState] = useState({
+    checked: false,
+    isLoggedIn: false,
+  });
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    setAuthState({ checked: true, isLoggedIn: !!token })
-  }, [])
+    const token = localStorage.getItem("token");
+    setAuthState({ checked: true, isLoggedIn: !!token });
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    setAuthState({ checked: true, isLoggedIn: false })
-    router.push('/login')
-  }
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setAuthState({ checked: true, isLoggedIn: false });
+    router.push("/login");
+  };
 
   if (!authState.checked) {
     return (
       <nav className="flex items-center justify-between px-8 py-4 border-b border-gray-800 bg-gray-950">
-        <Link href="/" className="text-xl font-bold text-white">AlgoFlow</Link>
+        <Link href="/" className="text-xl font-bold text-white">
+          AlgoFlow
+        </Link>
       </nav>
-    )
+    );
   }
 
   return (
     <nav className="flex items-center justify-between px-8 py-4 border-b border-gray-800 bg-gray-950">
-      <Link href="/" className="text-xl font-bold text-white">AlgoFlow</Link>
+      <Link href="/" className="text-xl font-bold text-white">
+        AlgoFlow
+      </Link>
 
       <div className="flex gap-4 items-center">
         {authState.isLoggedIn ? (
           <>
+            <Link
+              href="/problems"
+              className="text-gray-400 hover:text-white transition py-2"
+            >
+              Problems
+            </Link>
             <Link
               href="/dashboard"
               className="text-gray-400 hover:text-white transition py-2"
@@ -51,6 +64,12 @@ export default function Navbar() {
         ) : (
           <>
             <Link
+              href="/problems"
+              className="text-gray-400 hover:text-white transition py-2"
+            >
+              Problems
+            </Link>
+            <Link
               href="/login"
               className="text-gray-400 hover:text-white transition py-2"
             >
@@ -66,5 +85,5 @@ export default function Navbar() {
         )}
       </div>
     </nav>
-  )
+  );
 }
