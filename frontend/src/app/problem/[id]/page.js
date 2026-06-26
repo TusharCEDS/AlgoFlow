@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Editor from "@monaco-editor/react";
+import ReactMarkdown from "react-markdown";
 
 export default function Problem() {
   const params = useParams();
@@ -244,8 +245,8 @@ export default function Problem() {
               <label className="text-xs text-purple-400 mb-2 block font-semibold">
                 AI Hint ✨
               </label>
-              <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4 text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">
-                {hint}
+              <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4 text-sm text-gray-300 leading-relaxed">
+                <ReactMarkdown>{hint}</ReactMarkdown>
               </div>
             </div>
           )}

@@ -43,6 +43,12 @@ export default function Navbar() {
         {authState.isLoggedIn ? (
           <>
             <Link
+              href="/battle"
+              className="text-gray-400 hover:text-white transition py-2"
+            >
+              ⚔️ Battle
+            </Link>
+            <Link
               href="/problems"
               className="text-gray-400 hover:text-white transition py-2"
             >
