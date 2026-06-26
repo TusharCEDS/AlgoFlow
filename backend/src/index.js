@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth')
 const problemRoutes = require('./routes/problems')
 const authMiddleware = require('./middleware/auth')
 const submissionRoutes = require('./routes/submissions')
+const aiRoutes = require('./routes/ai')
 
 dotenv.config()
 
@@ -21,6 +22,7 @@ app.get('/api/protected', authMiddleware, (req, res) => {
   res.json({ message: `Hello user ${req.user.id}, you are authenticated` })
 })
 app.use('/api/submissions', submissionRoutes)
+app.use('/api/ai', aiRoutes)
 app.get('/', (req, res) => {
   res.json({ message: 'AlgoFlow backend is running' })
 })
