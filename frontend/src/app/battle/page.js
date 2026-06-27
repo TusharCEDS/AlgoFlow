@@ -180,6 +180,15 @@ export default function Battle() {
           <p className="text-gray-500 text-sm">
             Battle will start automatically when they join
           </p>
+          <button
+            onClick={() => {
+              setScreen("lobby");
+              setRoomId("");
+            }}
+            className="mt-6 text-gray-500 hover:text-gray-300 text-sm transition block mx-auto"
+          >
+            Cancel
+          </button>
         </div>
       </main>
     );
@@ -244,13 +253,28 @@ export default function Battle() {
             ))}
           </span>
         </div>
-        <button
-          onClick={handleSubmit}
-          disabled={submitting}
-          className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white px-6 py-2 rounded-lg text-sm font-medium transition"
-        >
-          {submitting ? "Submitting..." : "⚔️ Submit"}
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              setScreen("lobby");
+              setRoomId("");
+              setProblem(null);
+              setPlayers([]);
+              setCode("");
+              setError("");
+            }}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm transition"
+          >
+            Leave
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={submitting}
+            className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white px-6 py-2 rounded-lg text-sm font-medium transition"
+          >
+            {submitting ? "Submitting..." : "⚔️ Submit"}
+          </button>
+        </div>
       </div>
 
       {error && (
