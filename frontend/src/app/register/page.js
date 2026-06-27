@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
@@ -15,7 +15,12 @@ export default function Register() {
 
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-
+  useEffect(() => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    router.push('/dashboard')
+  }
+}, [router])
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }

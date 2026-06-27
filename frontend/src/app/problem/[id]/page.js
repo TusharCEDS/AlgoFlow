@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Editor from "@monaco-editor/react";
 import ReactMarkdown from "react-markdown";
-
+import Link from "next/link";
 export default function Problem() {
   const params = useParams();
   const { id } = params;
@@ -149,6 +149,12 @@ export default function Problem() {
     <main className="min-h-screen bg-gray-950 text-white">
       {/* Buttons Bar */}
       <div className="flex justify-end gap-3 px-8 py-3 border-b border-gray-800">
+        <Link
+          href="/problems"
+          className="text-gray-400 hover:text-white text-sm transition"
+        >
+          ← Back to Problems
+        </Link>
         <button
           onClick={handleRun}
           disabled={loading}
