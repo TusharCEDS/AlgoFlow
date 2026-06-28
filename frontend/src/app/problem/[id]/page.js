@@ -26,7 +26,7 @@ export default function Problem() {
     const fetchProblem = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/problems/${id}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problems/${id}`
         );
         const data = await response.json();
 
@@ -52,7 +52,7 @@ export default function Problem() {
     setOutput("");
 
     try {
-      const response = await fetch("http://localhost:6001/execute", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_EXECUTOR_URL}/execute`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +80,7 @@ export default function Problem() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("http://localhost:5000/api/submissions", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submissions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -108,7 +108,7 @@ export default function Problem() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("http://localhost:5000/api/ai/hint", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/ai/hint`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -13,3 +13,7 @@ node_modules/
 # OS files
 .DS_Store
 Thumbs.db
+
+frontend/.env.local
+backend/.env
+executor/.env

@@ -30,7 +30,7 @@ export default function Collab() {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     setUser(storedUser);
 
-    socketRef.current = io("http://localhost:5000");
+    socketRef.current = io(process.env.NEXT_PUBLIC_BACKEND_URL);
     const socket = socketRef.current;
 
     socket.on("collab-created", ({ roomId, code }) => {

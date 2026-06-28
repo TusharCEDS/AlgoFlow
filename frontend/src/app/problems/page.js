@@ -10,7 +10,7 @@ export default function Problems() {
   useEffect(() => {
     const fetchProblems = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/problems')
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/problems`)
         const data = await response.json()
         setProblems(data)
       } catch (err) {

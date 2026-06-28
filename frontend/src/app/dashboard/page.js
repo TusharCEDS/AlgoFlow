@@ -25,7 +25,7 @@ export default function Dashboard() {
 
       try {
         const response = await fetch(
-          "http://localhost:5000/api/submissions/stats",
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submissions/stats`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -37,7 +37,7 @@ export default function Dashboard() {
 
         // fetch battle stats
         const battleResponse = await fetch(
-          "http://localhost:5000/api/submissions/battle-stats",
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submissions/battle-stats`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
