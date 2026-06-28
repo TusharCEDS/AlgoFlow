@@ -44,6 +44,12 @@ export default function Navbar() {
         {authState.isLoggedIn ? (
           <>
             <Link
+              href="/visualizer"
+              className="text-gray-400 hover:text-white transition py-2"
+            >
+              📊 Visualize
+            </Link>
+            <Link
               href="/collab"
               className="text-gray-400 hover:text-white transition py-2"
             >
