@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Editor from "@monaco-editor/react";
+import dynamic from 'next/dynamic'
+const Editor = dynamic(() => import('@monaco-editor/react'), { ssr: false })
 import { io } from "socket.io-client";
 
 export default function Collab() {

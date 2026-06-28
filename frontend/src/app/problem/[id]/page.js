@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import Editor from "@monaco-editor/react";
+import dynamic from 'next/dynamic'
+const Editor = dynamic(() => import('@monaco-editor/react'), { ssr: false })
 import ReactMarkdown from "react-markdown";
 import Link from "next/link";
 export default function Problem() {

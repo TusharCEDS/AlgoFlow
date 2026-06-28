@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Editor from "@monaco-editor/react";
+import dynamic from "next/dynamic";
+const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 import { io } from "socket.io-client";
 
 export default function Battle() {
@@ -47,10 +48,11 @@ export default function Battle() {
       localStorage.setItem("battleRoomId", roomId);
     });
 
-    socket.on("room-joined", ({ problem }) => {
+    socket.on("room-joined", ({ problem, roomId }) => {
       setProblem(problem);
       setCode(problem.starter_code);
-      localStorage.setItem("battleRoomId", joinRoomId);
+      setRoomId(roomId);
+      localStorage.setItem("battleRoomId", roomId);
     });
 
     socket.on("battle-start", ({ problem, players }) => {
@@ -67,9 +69,10 @@ export default function Battle() {
     });
 
     socket.on("battle-submission-result", ({ message }) => {
-      setError(message);
-      setSubmitting(false);
-    });
+  console.log("battle-submission-result received:", message)
+  setError(message);
+  setSubmitting(false);
+});
 
     socket.on("error", ({ message }) => {
       setError(message);
@@ -104,6 +107,11 @@ export default function Battle() {
       code,
       username: user.username,
     });
+
+    // safety net — reset after 15 seconds if no response
+    setTimeout(() => {
+      setSubmitting(false);
+    }, 15000);
   };
 
   // LOBBY SCREEN

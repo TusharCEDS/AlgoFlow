@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { ReactFlow, Background, Controls } from '@xyflow/react'
-import '@xyflow/react/dist/style.css'
+import dynamic from 'next/dynamic'
+const ReactFlow = dynamic(() => import('@xyflow/react').then(mod => mod.ReactFlow), { ssr: false })
+const Background = dynamic(() => import('@xyflow/react').then(mod => mod.Background), { ssr: false })
+const Controls = dynamic(() => import('@xyflow/react').then(mod => mod.Controls), { ssr: false })
 
 export default function Visualizer() {
   const [activeTab, setActiveTab] = useState("sorting");

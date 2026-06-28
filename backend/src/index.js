@@ -83,7 +83,7 @@ io.on("connection", (socket) => {
     socket.join(roomId);
 
     // tell the joiner about the problem
-    socket.emit("room-joined", { roomId, problem: room.problem });
+    socket.emit("room-joined", {  problem: room.problem,roomId });
 
     // tell BOTH players battle is starting
     io.to(roomId).emit("battle-start", {
@@ -97,7 +97,14 @@ io.on("connection", (socket) => {
   // handle submission in battle
   socket.on("battle-submit", async ({ roomId, code, username }) => {
     const room = battleRooms[roomId];
-    if (!room || room.winner) return;
+    if (!room) return;
+    if (room.winner) {
+      socket.emit("battle-submission-result", {
+        passed: false,
+        message: "Battle already ended — opponent won!",
+      });
+      return;
+    }
 
     try {
       // get all test cases
@@ -115,6 +122,7 @@ io.on("connection", (socket) => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ code, input: tc.input }),
         });
+
         const data = await response.json();
         const actual = (data.output || "").trim();
         const expected = tc.expected_output.trim();
@@ -127,6 +135,36 @@ io.on("connection", (socket) => {
 
       if (allPassed && !room.winner) {
         room.winner = username;
+
+        // find winner and loser user IDs
+        try {
+          const winnerResult = await db.query(
+            "SELECT id FROM users WHERE username = $1",
+            [username],
+          );
+          const loserUsername = room.players.find(
+            (p) => p.username !== username,
+          )?.username;
+          const loserResult = await db.query(
+            "SELECT id FROM users WHERE username = $1",
+            [loserUsername],
+          );
+
+          if (winnerResult.rows.length > 0 && loserResult.rows.length > 0) {
+            await db.query(
+              "INSERT INTO battles (room_id, winner_id, loser_id, problem_id) VALUES ($1, $2, $3, $4)",
+              [
+                roomId,
+                winnerResult.rows[0].id,
+                loserResult.rows[0].id,
+                room.problem.id,
+              ],
+            );
+          }
+        } catch (err) {
+          console.error("Failed to save battle result:", err);
+        }
+
         io.to(roomId).emit("battle-won", { winner: username });
       } else {
         socket.emit("battle-submission-result", {
@@ -142,7 +180,6 @@ io.on("connection", (socket) => {
     }
   });
   // COLLAB ROOMS
-  
 
   socket.on("collab-create", ({ username }) => {
     const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -153,13 +190,11 @@ io.on("connection", (socket) => {
     };
 
     socket.join(`collab-${roomId}`);
-    socket.emit('collab-created', { roomId, code: collabRooms[roomId].code })
+    socket.emit("collab-created", { roomId, code: collabRooms[roomId].code });
     console.log(`Collab room ${roomId} created by ${username}`);
   });
 
   socket.on("collab-join", ({ roomId, username }) => {
-    console.log("collab-join received:", roomId, username);
-    console.log("available rooms:", Object.keys(collabRooms));
     const room = collabRooms[roomId];
 
     if (!room) {
@@ -186,12 +221,28 @@ io.on("connection", (socket) => {
     socket.to(`collab-${roomId}`).emit("collab-code-update", { code });
   });
 
-  socket.on("collab-leave", ({ roomId, username }) => {
+  socket.on("collab-leave", async ({ roomId, username }) => {
     if (!collabRooms[roomId]) return;
 
-    collabRooms[roomId].users = collabRooms[roomId].users.filter(
-      (u) => u.id !== socket.id,
-    );
+    const room = collabRooms[roomId];
+
+    // save session if creator is leaving
+    try {
+      const userResult = await db.query(
+        "SELECT id FROM users WHERE username = $1",
+        [username],
+      );
+      if (userResult.rows.length > 0) {
+        await db.query(
+          "INSERT INTO collab_sessions (room_id, created_by, final_code) VALUES ($1, $2, $3)",
+          [roomId, userResult.rows[0].id, room.code],
+        );
+      }
+    } catch (err) {
+      console.error("Failed to save collab session:", err);
+    }
+
+    room.users = room.users.filter((u) => u.id !== socket.id);
     socket.leave(`collab-${roomId}`);
     io.to(`collab-${roomId}`).emit("collab-user-left", { username });
   });

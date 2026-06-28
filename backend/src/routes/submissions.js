@@ -137,5 +137,49 @@ router.get("/stats", authMiddleware, async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+// GET battle stats
+router.get("/battle-stats", authMiddleware, async (req, res) => {
+  try {
+    const user_id = req.user.id;
 
+    const winsResult = await db.query(
+      "SELECT COUNT(*) as wins FROM battles WHERE winner_id = $1",
+      [user_id],
+    );
+
+    const lossesResult = await db.query(
+      "SELECT COUNT(*) as losses FROM battles WHERE loser_id = $1",
+      [user_id],
+    );
+
+    const recentBattlesResult = await db.query(
+      `SELECT b.room_id, b.created_at,
+        w.username as winner, l.username as loser,
+        p.title as problem_title
+       FROM battles b
+       JOIN users w ON b.winner_id = w.id
+       JOIN users l ON b.loser_id = l.id
+       JOIN problems p ON b.problem_id = p.id
+       WHERE b.winner_id = $1 OR b.loser_id = $1
+       ORDER BY b.created_at DESC
+       LIMIT 5`,
+      [user_id],
+    );
+
+    const collabResult = await db.query(
+      "SELECT COUNT(*) as sessions FROM collab_sessions WHERE created_by = $1",
+      [user_id],
+    );
+
+    res.json({
+      wins: parseInt(winsResult.rows[0].wins),
+      losses: parseInt(lossesResult.rows[0].losses),
+      collabSessions: parseInt(collabResult.rows[0].sessions),
+      recentBattles: recentBattlesResult.rows,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 module.exports = router;
